@@ -17,27 +17,30 @@ metadata_t *search_ptr(void *ptr)
     return (NULL);
 }
 
-void free(void *ptr)
+metadata_t *move_meta(metadata_t *meta)
 {
-    metadata_t *meta = search_ptr(ptr);
-
-    if (!meta)
-        return;
-
-    meta->free = 1;
     for (; meta->next && meta->next->free == 1; meta = meta->next);
-    for (metadata_t *prev = meta->prev; prev && prev->free == 1; prev = prev->prev) {
+    for (metadata_t *prev = meta->prev; prev
+    && prev->free == 1; prev = prev->prev) {
         prev->size += meta->size + MD_SIZE;
         prev->next = meta->next;
         if (meta->next)
             meta->next->prev = prev;
         meta = prev;
     }
+    return (meta);
+}
 
-    if (!meta->prev
-    && !first->next)
+void free(void *ptr)
+{
+    metadata_t *meta = search_ptr(ptr);
+
+    if (!meta)
+        return;
+    meta->free = 1;
+    meta = move_meta(meta);
+    if (!meta->prev && !first->next)
         first = NULL;
-
     if (!meta->next) {
         last = meta->prev;
         if (meta->prev)

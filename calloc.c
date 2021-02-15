@@ -11,9 +11,11 @@
 
 void *calloc(size_t nmemb, size_t size)
 {
+    void *ptr;
+
     if (!nmemb || !size)
-        return NULL;
-    void *ptr = malloc(size * nmemb);
+        return (NULL);
+    ptr = malloc(size * nmemb);
     for (size_t ctr = 0; ctr < size * nmemb; ctr += 1)
         ((char *)(ptr))[ctr] = 0;
     return (ptr);
