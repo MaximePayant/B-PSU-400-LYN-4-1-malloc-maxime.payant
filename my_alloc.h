@@ -25,8 +25,7 @@ extern const size_t MD_SIZE;
 extern metadata_t *first;
 extern metadata_t *last;
 
-void printMemory();
-void printMemoryBis(metadata_t *ptr);
-int my_put_nbr(unsigned nb);
+metadata_t *search_meta(void *ptr);
+metadata_t *fusion_free_data(metadata_t *meta);
 
 #endif // MY_ALLOC_H
