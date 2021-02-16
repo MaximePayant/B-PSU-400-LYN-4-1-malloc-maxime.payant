@@ -9,10 +9,11 @@
 
 void free(void *ptr)
 {
-    metadata_t *meta = search_meta(ptr);
+    metadata_t *meta;
 
-    if (!meta)
+    if (!ptr)
         return;
+    meta = (metadata_t *)((char *)ptr - MD_SIZE);
     meta->free = 1;
     meta = fusion_free_data(meta);
     if (!meta->prev && !first->next)
