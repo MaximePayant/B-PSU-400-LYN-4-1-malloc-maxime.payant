@@ -9,11 +9,11 @@
 
 void free(void *ptr)
 {
-    write(1, "Free ", 5);
+    //write(1, "Free ", 5);
     metadata_t *meta;
 
     if (!ptr) {
-        write(1, "Fail\n", 5);
+        //write(1, "Fail\n", 5);
         return;
     }
     meta = (metadata_t *)((char *)ptr - MD_SIZE);
@@ -28,5 +28,5 @@ void free(void *ptr)
             meta->prev->next = NULL;
         sbrk(-(meta->size + MD_SIZE));
     }
-    write(1, "Done\n", 5);
+    //write(1, "Done\n", 5);
 }

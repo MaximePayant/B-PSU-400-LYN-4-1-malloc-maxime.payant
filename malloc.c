@@ -70,7 +70,7 @@ metadata_t *split_space(metadata_t *meta, size_t size)
 
 void *malloc(size_t size)
 {
-    write(1, "Malloc ", 7);
+    //write(1, "Malloc ", 7);
     size_t aligned_size = align_size(size, 8);
     metadata_t *meta = search_free_space(aligned_size);
 
@@ -78,9 +78,9 @@ void *malloc(size_t size)
         meta = create_space(aligned_size);
     if (meta) {
         meta = split_space(meta, aligned_size);
-        write(1, "Done\n", 5);
+        //write(1, "Done\n", 5);
         return (meta->ptr);
     }
-    write(1, "Fail\n", 5);
+    //write(1, "Fail\n", 5);
     return (NULL);
 }

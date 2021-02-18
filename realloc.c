@@ -21,12 +21,12 @@ static void *create_new_copy_ptr(void *ptr, size_t size)
 
 void *realloc(void *ptr, size_t size)
 {
-    write(1, "Realloc ", 8);
+    //write(1, "Realloc ", 8);
     size_t aligned_size = align_size(size, 8);
     metadata_t *meta;
 
     if (!ptr) {
-        write(1, "Done\n", 5);
+        //write(1, "Done\n", 5);
         return (malloc(size));
     }
 
@@ -34,7 +34,7 @@ void *realloc(void *ptr, size_t size)
     if (meta->next) {
         if (!meta->next->free
         || meta->next->size + meta->size <= aligned_size) {
-            write(1, "Done\n", 5);
+            //write(1, "Done\n", 5);
             return (create_new_copy_ptr(ptr, aligned_size));
         }
         else {
@@ -47,6 +47,6 @@ void *realloc(void *ptr, size_t size)
         sbrk(align_size(aligned_size, getpagesize() * 2));
         meta->size = aligned_size;
     }
-    write(1, "Done\n", 5);
+    //write(1, "Done\n", 5);
     return (meta->ptr);
 }
