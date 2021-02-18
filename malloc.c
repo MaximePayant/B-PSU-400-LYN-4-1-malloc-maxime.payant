@@ -5,6 +5,10 @@
 ** malloc.c
 */
 
+#include <stdio.h>
+
+#include "test/utils.h"
+
 #include "my_alloc.h"
 
 const size_t MD_SIZE = sizeof(metadata_t);
@@ -23,18 +27,20 @@ metadata_t *search_free_space(size_t size)
     return (result);
 }
 
-metadata_t *create_space(metadata_t *meta, size_t size)
+metadata_t *create_space(size_t aligned_size)
 {
-    meta = sbrk(MD_SIZE + size);
+    size_t size = align_size(aligned_size, getpagesize() * 2);
+    metadata_t *meta = sbrk(size);
+
     if (meta != (void *)(-1)) {
         if (!first)
             first = meta;
         if (last)
             last->next = meta;
-        meta->size = size;
+        meta->size = size - MD_SIZE;
         meta->next = NULL;
         meta->prev = last;
-        meta->free = 0;
+        meta->free = 1;
         meta->ptr = (void *)((char *)meta + MD_SIZE);
         last = meta;
     }
@@ -57,16 +63,24 @@ metadata_t *split_space(metadata_t *meta, size_t size)
     meta->next = new;
     meta->free = 0;
     meta->size = size;
+    if (meta == last)
+        last = new;
     return (meta);
 }
 
 void *malloc(size_t size)
 {
-    size_t align_size = (size + size % 2);
-    metadata_t *meta = search_free_space(align_size);
+    write(1, "Malloc ", 7);
+    size_t aligned_size = align_size(size, 8);
+    metadata_t *meta = search_free_space(aligned_size);
 
-    meta = (meta ? split_space(meta, align_size) : create_space(meta, align_size));
-    if (meta)
+    if (!meta)
+        meta = create_space(aligned_size);
+    if (meta) {
+        meta = split_space(meta, aligned_size);
+        write(1, "Done\n", 5);
         return (meta->ptr);
+    }
+    write(1, "Fail\n", 5);
     return (NULL);
 }
