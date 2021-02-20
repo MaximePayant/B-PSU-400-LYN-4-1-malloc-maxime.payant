@@ -7,26 +7,31 @@
 
 #include "my_alloc.h"
 
+static size_t align_size_down(size_t size, size_t nb)
+{
+    size_t result = size;
+
+    if (size % nb != 0)
+        result = (size - (size % nb));
+    return (result);
+}
+
 void free(void *ptr)
 {
-    //write(1, "Free ", 5);
     metadata_t *meta;
 
-    if (!ptr) {
-        //write(1, "Fail\n", 5);
+    if (!ptr)
         return;
-    }
     meta = (metadata_t *)((char *)ptr - MD_SIZE);
     meta->free = 1;
     meta = fusion_free_data(meta);
-    if (!meta->prev && !first->next)
-        first = NULL;
-    if (!meta->next
-    && meta->size + MD_SIZE >= (size_t)(getpagesize() * 2)) {
-        last = meta->prev;
-        if (meta->prev)
-            meta->prev->next = NULL;
-        sbrk(-(meta->size + MD_SIZE));
+    if (!meta->next) {
+        if (meta->size >= (size_t)(getpagesize() * 2)) {
+            size_t aligned_size = align_size_down(meta->size, (size_t)(getpagesize() * 2));
+
+            meta->size -= aligned_size;
+            sbrk(-aligned_size);
+        }
+        last = meta;
     }
-    //write(1, "Done\n", 5);
 }

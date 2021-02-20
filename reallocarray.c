@@ -13,7 +13,7 @@
 
 void *reallocarray(void *ptr, size_t nmemb, size_t size)
 {
-    if ((long)(align_size(nmemb * size, 8)) > INT_MAX) {
+    if (nmemb > ULONG_MAX / size) {
         errno = ENOMEM;
         return (NULL);
     }
