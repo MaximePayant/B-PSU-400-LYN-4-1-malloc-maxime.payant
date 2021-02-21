@@ -25,7 +25,6 @@ extern const size_t MD_SIZE;
 extern metadata_t *first;
 extern metadata_t *last;
 
-metadata_t *fusion_free_data(metadata_t *meta);
 size_t align_size(size_t size, size_t nb);
 
 #endif // MY_ALLOC_H

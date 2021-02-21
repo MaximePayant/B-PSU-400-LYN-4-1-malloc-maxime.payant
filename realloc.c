@@ -5,10 +5,9 @@
 ** realloc.c
 */
 
-#include "my_alloc.h"
-
 #include <string.h>
-#include <unistd.h>
+
+#include "my_alloc.h"
 
 static void *create_new_copy_ptr(void *ptr, size_t size)
 {

@@ -7,7 +7,6 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <unistd.h>
 
 #include "my_alloc.h"
 
